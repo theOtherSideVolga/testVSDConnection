@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <property name="VNS_PORTAL_LOG_FILE_NAME" value="logs/vnsportal.log" />
+    <property name="VSD_COMM_LOG_FILE_NAME" value="logs/vsdrest.log" />
+    <property name="EMAIL_SERVICE_LOG_FILE_NAME" value="logs/emailservice.log" />
+    <property name="FLYWAY_LOG_FILE_NAME" value="logs/flyway.log" />
+    <property name="SPRING_LOG_FILE_NAME" value="logs/spring.log" />
+    <property name="FILE_LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
+
+    <springProfile name="!production">
+        <logger name="vns.logback" level="TRACE" />
+    </springProfile>
+
+    <appender name="VNS_PORTAL_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${VNS_PORTAL_LOG_FILE_NAME}</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <layout>
+            <Pattern>[%X{requestId}] %m%n</Pattern>
+        </layout>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${VNS_PORTAL_LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>        
+    </appender>
+
+    <appender name="VSD_COMMUNICATION_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${VSD_COMM_LOG_FILE_NAME}</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${VSD_COMM_LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>        
+    </appender>
+
+    <appender name="EMAIL_SERVICE_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${EMAIL_SERVICE_LOG_FILE_NAME}</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${EMAIL_SERVICE_LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>        
+    </appender>
+    
+    <appender name="FLYWAY_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${FLYWAY_LOG_FILE_NAME}</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${FLYWAY_LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>        
+    </appender>
+
+    <appender name="SPRING_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${SPRING_LOG_FILE_NAME}</file>
+        <encoder>
+            <pattern>${FILE_LOG_PATTERN}</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${SPRING_LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>        
+    </appender>
+    
+    <logger name="org.springframework" level="WARN">
+        <appender-ref ref="SPRING_LOG_FILE"/>
+    </logger>
+    <logger name="org.hibernate" level="WARN">
+        <appender-ref ref="SPRING_LOG_FILE"/>
+    </logger>
+    <logger name="com.nokia.nuage.apps" level="INFO">
+        <appender-ref ref="VNS_PORTAL_LOG_FILE"/>
+    </logger>
+    <logger name="net.nuagenetworks.bambou" level="DEBUG">
+        <appender-ref ref="VSD_COMMUNICATION_LOG_FILE"/>
+    </logger>
+    <logger name="org.flywaydb" level="INFO">
+    <appender-ref ref="FLYWAY_LOG_FILE"/>
+    </logger>
+    <logger name="com.nokia.nuage.apps.vnsportal.service.MailServiceImpl" level="DEBUG" additivity="false">
+        <appender-ref ref="EMAIL_SERVICE_LOG_FILE"/>
+    </logger>
+    
+    
+
+    <root level="error">
+    </root>
+</configuration>
+
